@@ -1,0 +1,91 @@
+{
+	"info": {
+		"_postman_id": "5c0902a1-afb5-4b93-88b1-6686b055ed24",
+		"name": "Listings",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33103019"
+	},
+	"item": [
+		{
+			"name": "Listing Create",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "4|oUCqDQJdtx9TDk1TWQIGpoIy5TglFoDvX35KemCp6b4a853b",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\":\"Luxuriours Appartmetns \",\r\n    \"description\":\"Our Premium Location\",\r\n    \"base_price\": -0,\r\n    \"location\":\"Pakistan\",\r\n    \"expiry_date\":\"01-11-2024\"\r\n\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/listings",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"listings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Listings",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "4|oUCqDQJdtx9TDk1TWQIGpoIy5TglFoDvX35KemCp6b4a853b",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseURL}}/listings?max_price=0",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"listings"
+					],
+					"query": [
+						{
+							"key": "max_price",
+							"value": "0"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

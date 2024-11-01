@@ -1,66 +1,216 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Real Estate Bidding Platform Deployment Guide
 
-## About Laravel
+This guide provides step-by-step instructions for deploying the Real Estate Bidding Platform on a production environment.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Prerequisites
+- **PHP >= 8.0**
+- **Composer**
+- **MySQL or compatible database**
+- **Node.js and npm** (if using frontend assets)
+- **Redis** (if using queues or caching)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Deployment Steps
 
-## Learning Laravel
+### 1. Clone the Repository
+1. SSH into your server.
+2. Clone the project repository.
+   ```bash
+   git clone https://github.com/syedahnb/real-estate-listing-bidding-api.git
+   cd real-estate-listing-bidding-api
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Install Dependencies
+- **PHP Dependencies**:
+  ```bash
+  composer install
+  ```
+- **Node.js Dependencies** (if applicable):
+  ```bash
+  npm install
+  ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. Configure Environment Variables
+1. Copy `.env.example` to `.env`.
+   ```bash
+   cp .env.example .env
+   ```
+2. Update `.env` with production settings:
+    - **DB_DATABASE**: Database name
+    - **DB_USERNAME**: Database username
+    - **DB_PASSWORD**: Database password
+    - **APP_URL**: URL of the app, e.g., `https://yourdomain.com`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 4. Generate the Application Key
+This key is necessary for encrypted data.
+```bash
+php artisan key:generate
+```
 
-## Laravel Sponsors
+### 5. Set Up the Database
+1. Run migrations to create tables.
+   ```bash
+   php artisan migrate
+   ```
+2. Optional: Seed data if required for testing.
+   ```bash
+   php artisan db:seed
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 6. Set Up File Storage Link
+To enable file uploads, link storage:
+```bash
+php artisan storage:link
+```
 
-### Premium Partners
+### 7. Configure Cache and Queue (Optional)
+If using Redis, update `.env`:
+```plaintext
+CACHE_DRIVER=redis
+QUEUE_CONNECTION=redis
+```
+Run the queue worker:
+```bash
+php artisan queue:work
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### 8. Build Frontend Assets (if applicable)
+If frontend assets are used, build them:
+```bash
+npm run build
+```
 
-## Contributing
+### 9. Serve the Application
+#### Local Development
+```bash
+php artisan serve
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+#### Production (Apache/Nginx)
+Point the web server to the `public` directory.
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Post-Deployment Notes
+- **Clearing Cache**:
+  ```bash
+  php artisan cache:clear
+  php artisan config:clear
+  php artisan route:clear
+  php artisan view:clear
+  ```
 
-## Security Vulnerabilities
+- **Running Tests**:
+  ```bash
+  php artisan test
+  ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+---
 
-## License
+## API Endpoints
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Base URL
+`https://yourdomain.com/api`
+
+---
+
+### User Authentication
+1. **Register**
+    - **Method**: POST
+    - **Endpoint**: `/api/register`
+    - **Body**:
+      ```json
+      {
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "password": "password123"
+      }
+      ```
+
+2. **Login**
+    - **Method**: POST
+    - **Endpoint**: `/api/login`
+    - **Body**:
+      ```json
+      {
+        "email": "johndoe@example.com",
+        "password": "password123"
+      }
+      ```
+
+### Listings
+1. **Create a Listing** (Admin only)
+    - **Method**: POST
+    - **Endpoint**: `/api/listings`
+    - **Body**:
+      ```json
+      {
+        "title": "Luxury Apartment",
+        "description": "Beautiful apartment in NYC.",
+        "base_price": 500000,
+        "location": "New York",
+        "status": "active",
+        "expiry_date": "2024-12-31"
+      }
+      ```
+
+2. **Get Listings**
+    - **Method**: GET
+    - **Endpoint**: `/api/listings`
+    - **Params**:
+        - `location`: Filter by location
+        - `min_price`: Minimum price
+        - `max_price`: Maximum price
+        - `sort_by`: Sort by `base_price`, `created_at`, or `expiry_date`
+
+### Bidding
+1. **Place a Bid**
+    - **Method**: POST
+    - **Endpoint**: `/api/listings/{listingId}/bid`
+    - **Body**:
+      ```json
+      {
+        "bid_amount": 550000
+      }
+      ```
+
+2. **Get Bidding History**
+    - **Method**: GET
+    - **Endpoint**: `/api/users/{userId}/bidding-history`
+    - **Response** (Example):
+      ```json
+      [
+        {
+          "listing": {
+            "title": "Luxury Apartment",
+            "highest_bid": 550000
+          },
+          "bid_amount": 550000,
+          "status": "winning",
+          "timestamp": "2024-11-01T12:00:00Z"
+        }
+      ]
+      ```
+
+---
+
+## Downloadable Postman Collection Files
+
+For easier testing, download the Postman collection files for each module:
+
+- **User Module**: [Download User Collection](sandbox:/mnt/data/User.postman_collection.json)
+- **Listings Module**: [Download Listings Collection](sandbox:/mnt/data/Listings.postman_collection.json)
+- **Bids Module**: [Download Bids Collection](sandbox:/mnt/data/Bids.postman_collection.json)
+
+---
+
+## Troubleshooting
+- **500 Server Error**: Verify `.env` configurations, file permissions, and ensure dependencies are installed.
+- **Queue Issues**: Confirm `queue:work` is running or check `QUEUE_CONNECTION`.
+
+---
+
+For more details, consult the application's documentation or reach out to support.
+

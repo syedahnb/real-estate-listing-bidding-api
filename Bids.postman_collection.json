@@ -1,0 +1,111 @@
+{
+	"info": {
+		"_postman_id": "831a4950-3c56-4be1-a0ef-c66cd113c092",
+		"name": "Bids",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33103019"
+	},
+	"item": [
+		{
+			"name": "Place a bid",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "7|ZTC39p0l6jQPoE0g9xQHUI8LONDtV1GVv8iyXNSg210b8b7f",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bid_amount\": 2400000\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/listings/508/bid",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"listings",
+						"508",
+						"bid"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Listing Bids",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "4|oUCqDQJdtx9TDk1TWQIGpoIy5TglFoDvX35KemCp6b4a853b",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/listings/1/bids?start_date=2024-09-01&end_date=2024-09-30",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"listings",
+						"1",
+						"bids"
+					],
+					"query": [
+						{
+							"key": "start_date",
+							"value": "2024-09-01"
+						},
+						{
+							"key": "end_date",
+							"value": "2024-09-30"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
